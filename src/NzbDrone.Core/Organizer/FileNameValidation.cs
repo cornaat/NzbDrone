@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Organizer
             var value = context.PropertyValue as String;
 
             if (!FileNameBuilder.SeasonEpisodePatternRegex.IsMatch(value) &&
-                !FileNameBuilder.AbsoluteEpisodePatternRegex.IsMatch(value))
+                !FileNameBuilder.AirDateRegex.IsMatch(value))
             {
                 return false;
             }
@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Organizer
             var value = context.PropertyValue as String;
 
             if (!FileNameBuilder.SeasonEpisodePatternRegex.IsMatch(value) &&
-                !FileNameBuilder.AirDateRegex.IsMatch(value))
+                !FileNameBuilder.AbsoluteEpisodePatternRegex.IsMatch(value))
             {
                 return false;
             }
