@@ -137,14 +137,9 @@ namespace NzbDrone.Core.History
                     history.Data.Add("DownloadClientId", message.DownloadClientId);
                 }
 
-                if (!message.Episode.ParsedEpisodeInfo.SubGroup.IsNullOrWhiteSpace())
-                {
-                    history.Data.Add("SubGroup", message.Episode.ParsedEpisodeInfo.SubGroup);
-                }
-
                 if (!message.Episode.ParsedEpisodeInfo.ReleaseHash.IsNullOrWhiteSpace())
                 {
-                    history.Data.Add("ReleaseHash", message.Episode.ParsedEpisodeInfo.SubGroup);
+                    history.Data.Add("ReleaseHash", message.Episode.ParsedEpisodeInfo.ReleaseHash);
                 }
 
                 _historyRepository.Insert(history);

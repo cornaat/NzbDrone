@@ -219,13 +219,14 @@ namespace NzbDrone.Core.Parser
                                 Logger.Debug("Quality parsed: {0}", result.Quality);
 
                                 result.ReleaseGroup = ParseReleaseGroup(title);
-                                Logger.Debug("Release Group parsed: {0}", result.ReleaseGroup);
 
-                                result.SubGroup = GetSubGroup(match);
-                                if (!result.SubGroup.IsNullOrWhiteSpace())
+                                var subGroup = GetSubGroup(match);
+                                if (!subGroup.IsNullOrWhiteSpace())
                                 {
-                                    Logger.Debug("Sub Group parsed: {0}", result.SubGroup);
+                                    result.ReleaseGroup = subGroup;
                                 }
+
+                                Logger.Debug("Release Group parsed: {0}", result.ReleaseGroup);
 
                                 result.ReleaseHash = GetReleaseHash(match);
                                 if (!result.ReleaseHash.IsNullOrWhiteSpace())
@@ -299,9 +300,7 @@ namespace NzbDrone.Core.Parser
             const string defaultReleaseGroup = "DRONE";
 
             title = title.Trim();
-
             title = RemoveFileExtension(title);
-
             title = title.TrimEnd("-RP");
 
             var matches = ReleaseGroupRegex.Matches(title);

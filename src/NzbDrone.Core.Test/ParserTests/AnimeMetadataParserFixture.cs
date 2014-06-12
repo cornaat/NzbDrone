@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Test.ParserTests
         {
             var result = Parser.Parser.ParseTitle(postTitle);
             result.Should().NotBeNull();
-            result.SubGroup.Should().Be(subGroup);
+            result.ReleaseGroup.Should().Be(subGroup);
             result.ReleaseHash.Should().Be(hash);
         }
     }
