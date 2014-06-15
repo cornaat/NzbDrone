@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Tv
         Episode FindEpisode(int seriesId, int absoluteEpisodeNumber);
         Episode FindEpisodeByName(int seriesId, int seasonNumber, string episodeTitle);
         List<Episode> FindEpisodesBySceneNumbering(int seriesId, int seasonNumber, int episodeNumber);
+        Episode FindEpisodeBySceneNumbering(int seriesId, int sceneAbsoluteEpisodeNumber);
         Episode GetEpisode(int seriesId, String date);
         Episode FindEpisode(int seriesId, String date);
         List<Episode> GetEpisodeBySeries(int seriesId);
@@ -68,6 +69,11 @@ namespace NzbDrone.Core.Tv
         public List<Episode> FindEpisodesBySceneNumbering(int seriesId, int seasonNumber, int episodeNumber)
         {
             return _episodeRepository.FindEpisodesBySceneNumbering(seriesId, seasonNumber, episodeNumber);
+        }
+
+        public Episode FindEpisodeBySceneNumbering(int seriesId, int sceneAbsoluteEpisodeNumber)
+        {
+            return _episodeRepository.FindEpisodeBySceneNumbering(seriesId, sceneAbsoluteEpisodeNumber);
         }
 
         public Episode GetEpisode(int seriesId, String date)
