@@ -111,7 +111,7 @@ namespace NzbDrone.Core.MetadataSource
             series.Runtime = show.runtime;
             series.Network = show.network;
             series.AirTime = show.air_time;
-            series.TitleSlug = show.url.ToLower().Replace("http://trakt.tv/show/", "");
+            series.TitleSlug = GetTitleSlug(show.url);
             series.Status = GetSeriesStatus(show.status, show.ended);
             series.Ratings = GetRatings(show.ratings);
             series.Genres = show.genres;
@@ -272,6 +272,18 @@ namespace NzbDrone.Core.MetadataSource
             }
 
             return seasons;
+        }
+
+        private static String GetTitleSlug(String url)
+        {
+            var slug = url.ToLower().Replace("http://trakt.tv/show/", "");
+
+            if (slug.StartsWith("."))
+            {
+                slug = "dot" + slug.Substring(1);
+            }
+
+            return slug;
         }
     }
 }
