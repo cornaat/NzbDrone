@@ -250,7 +250,7 @@
     <Compile Include="TvTests\EpisodeProviderTests\EpisodeProviderTest_GetEpisodesByParseResult.cs" />
     <Compile Include="FluentTest.cs" />
     <Compile Include="InstrumentationTests\DatabaseTargetFixture.cs" />
-    <Compile Include="OrganizerTests\GetNewFilenameFixture.cs" />
+    <Compile Include="OrganizerTests\FileNameBuilderFixture.cs" />
     <Compile Include="DecisionEngineTests\MonitoredEpisodeSpecificationFixture.cs" />
     <Compile Include="DecisionEngineTests\DownloadDecisionMakerFixture.cs" />
     <Compile Include="Qualities\QualityModelComparerFixture.cs" />

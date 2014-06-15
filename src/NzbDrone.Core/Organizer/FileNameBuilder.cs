@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Organizer
                 }
             }
 
-            if (series.SeriesType == SeriesTypes.Anime)
+            if (series.SeriesType == SeriesTypes.Anime && episodes.All(e => e.AbsoluteEpisodeNumber > 0))
             {
                 pattern = namingConfig.AnimeEpisodeFormat;
             }

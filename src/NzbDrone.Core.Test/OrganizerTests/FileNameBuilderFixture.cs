@@ -486,5 +486,18 @@ namespace NzbDrone.Core.Test.OrganizerTests
             Subject.BuildFilename(new List<Episode> { _episode1, _episode2 }, _series, _episodeFile)
                    .Should().Be("South Park - 100 - 101 - City Sushi");
         }
+
+        [Test]
+        public void should_use_standard_naming_when_anime_episode_has_absolute_number_of_zero()
+        {
+            _series.SeriesType = SeriesTypes.Anime;
+            _episode1.AbsoluteEpisodeNumber = 0;
+
+            _namingConfig.StandardEpisodeFormat = "{Series Title} - {season:0}x{episode:00} - {Episode Title}";
+            _namingConfig.AnimeEpisodeFormat = "{Series Title} - {absolute:000} - {Episode Title}";
+
+            Subject.BuildFilename(new List<Episode> { _episode1, }, _series, _episodeFile)
+                   .Should().Be("South Park - 15x06 - City Sushi");
+        }
     }
 }
