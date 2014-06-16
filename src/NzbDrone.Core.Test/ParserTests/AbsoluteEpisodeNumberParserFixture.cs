@@ -63,6 +63,8 @@ namespace NzbDrone.Core.Test.ParserTests
         [TestCase("Fairy Tail - 100 - Mest", "Fairy Tail", 100, 0, 0)]
 //        [TestCase("Fairy Tail - 101 - Mest", "Fairy Tail", 100, 0, 0)] //This gets caught up in the 'see' numbering
         [TestCase("[Exiled-Destiny] Angel Beats Ep01 (D2201EC5).mkv", "Angel Beats!", 1, 0, 0)]
+        [TestCase("[Commie] Nobunaga the Fool - 23 [5396CA24].mkv", "Nobunaga the Fool", 23, 0, 0)]
+        [TestCase("[FFF] Seikoku no Dragonar - 01 [1FB538B5].mkv", "Seikoku no Dragonar", 1, 0, 0)]
         public void should_parse_absolute_numbers(string postTitle, string title, int absoluteEpisodeNumber, int seasonNumber, int episodeNumber)
         {
             var result = Parser.Parser.ParseTitle(postTitle);

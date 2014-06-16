@@ -155,7 +155,7 @@ namespace NzbDrone.Core.Parser
 
                 foreach (var absoluteEpisodeNumber in parsedEpisodeInfo.AbsoluteEpisodeNumbers)
                 {
-                    Episode episode;
+                    Episode episode = null;
 
                     if (sceneSource)
                     {
@@ -171,7 +171,7 @@ namespace NzbDrone.Core.Parser
                         }
                     }
 
-                    else
+                    if (episode == null)
                     {
                         episode = _episodeService.FindEpisode(series.Id, absoluteEpisodeNumber);
                     }
