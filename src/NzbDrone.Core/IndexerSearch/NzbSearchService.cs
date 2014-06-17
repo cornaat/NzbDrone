@@ -144,7 +144,7 @@ namespace NzbDrone.Core.IndexerSearch
             var searchSpec = Get<SpecialEpisodeSearchCriteria>(series, episodes);
             // build list of queries for each episode in the form: "<series> <episode-title>"
             searchSpec.EpisodeQueryTitles = episodes.Where(e => !String.IsNullOrWhiteSpace(e.Title))
-                                                    .Select(e => searchSpec.QueryTitle + " " + SearchCriteriaBase.GetQueryTitle(e.Title))
+                                                    .SelectMany(e => searchSpec.QueryTitles.Select(title => title + " " + SearchCriteriaBase.GetQueryTitle(e.Title)))
                                                     .ToArray();
 
             return Dispatch(indexer => _feedFetcher.Fetch(indexer, searchSpec), searchSpec);
@@ -161,7 +161,7 @@ namespace NzbDrone.Core.IndexerSearch
                 return SearchSpecial(series, episodes);
             }
 
-            List<DownloadDecision> downloadDecisions = new List<DownloadDecision>();
+            var downloadDecisions = new List<DownloadDecision>();
 
             if (series.UseSceneNumbering)
             {
@@ -215,13 +215,14 @@ namespace NzbDrone.Core.IndexerSearch
             var spec = new TSpec();
 
             spec.Series = series;
-            spec.SceneTitle = _sceneMapping.GetSceneName(series.TvdbId);
+            spec.SceneTitles = _sceneMapping.GetSceneNames(series.TvdbId,
+                                                           episodes.Select(e => e.SeasonNumber)
+                                                                   .Concat(episodes.Select(e => e.SceneSeasonNumber)
+                                                                   .Distinct()));
+
             spec.Episodes = episodes;
 
-            if (spec.SceneTitle.IsNullOrWhiteSpace())
-            {
-                spec.SceneTitle = series.Title;
-            }
+            spec.SceneTitles.Add(series.Title);
 
             return spec;
         }

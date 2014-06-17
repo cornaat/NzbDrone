@@ -39,29 +39,40 @@ namespace NzbDrone.Core.Indexers.Fanzub
             }
         }
 
-        public override IEnumerable<string> GetEpisodeSearchUrls(string seriesTitle, int tvRageId, int seasonNumber, int episodeNumber)
+        public override IEnumerable<string> GetEpisodeSearchUrls(List<String> titles, int tvRageId, int seasonNumber, int episodeNumber)
         {
             return new List<string>();
         }
 
-        public override IEnumerable<string> GetSeasonSearchUrls(string seriesTitle, int tvRageId, int seasonNumber, int offset)
+        public override IEnumerable<string> GetSeasonSearchUrls(List<String> titles, int tvRageId, int seasonNumber, int offset)
         {
             return new List<string>();
         }
 
-        public override IEnumerable<string> GetDailyEpisodeSearchUrls(string seriesTitle, int tvRageId, DateTime date)
+        public override IEnumerable<string> GetDailyEpisodeSearchUrls(List<String> titles, int tvRageId, DateTime date)
         {
             return new List<string>();
         }
 
-        public override IEnumerable<string> GetAnimeEpisodeSearchUrls(string seriesTitle, int tvRageId, int absoluteEpisodeNumber)
+        public override IEnumerable<string> GetAnimeEpisodeSearchUrls(List<String> titles, int tvRageId, int absoluteEpisodeNumber)
         {
-            return RecentFeed.Select(url => String.Format("{0}&q=\"{1}%20{2:00}\"%7C\"{1}%20-%20{2:00}\"", url, seriesTitle, absoluteEpisodeNumber));
+            var searchStrings = titles.SelectMany(title => GetTitleSearchStrings(title, absoluteEpisodeNumber));
+
+            return RecentFeed.Select(url => String.Format("{0}&q={1}",
+                                            url,
+                                            String.Join("|", titles.SelectMany(title => GetTitleSearchStrings(title, absoluteEpisodeNumber)))));
         }
 
         public override IEnumerable<string> GetSearchUrls(string query, int offset)
         {
             return new List<string>();
+        }
+
+        private IEnumerable<String> GetTitleSearchStrings(string title, int absoluteEpisodeNumber)
+        {
+            var formats = new[] { "{0}%20{1:00}", "{0}%20-%20{1:00}" };
+
+            return formats.Select(s => "\"" + String.Format(s, title, absoluteEpisodeNumber) + "\"" );
         }
     }
 }
