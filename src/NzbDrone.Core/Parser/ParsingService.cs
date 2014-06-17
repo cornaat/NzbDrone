@@ -161,8 +161,18 @@ namespace NzbDrone.Core.Parser
                     {
                         if (sceneSeasonNumber.HasValue && sceneSeasonNumber > 1)
                         {
-                            episode = _episodeService.FindEpisode(series.Id, sceneSeasonNumber.Value,
+                            var episodes = _episodeService.FindEpisodesBySceneNumbering(series.Id, sceneSeasonNumber.Value, absoluteEpisodeNumber);
+
+                            if (episodes.Count == 1)
+                            {
+                                episode = episodes.First();
+                            }
+
+                            if (episode == null)
+                            {
+                                episode = _episodeService.FindEpisode(series.Id, sceneSeasonNumber.Value,
                                 absoluteEpisodeNumber);
+                            }
                         }
 
                         else
