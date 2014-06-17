@@ -1,4 +1,5 @@
-﻿using NzbDrone.Core.IndexerSearch;
+﻿using NzbDrone.Core.DataAugmentation.Scene;
+using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Test.Framework;
 using FizzWare.NBuilder;
 using System;
@@ -29,9 +30,9 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
                   .Setup(s => s.GetAvailableProviders())
                   .Returns(new List<IIndexer> { indexer.Object });
 
-            Mocker.GetMock<NzbDrone.Core.DecisionEngine.IMakeDownloadDecision>()
+            Mocker.GetMock<DecisionEngine.IMakeDownloadDecision>()
                 .Setup(s => s.GetSearchDecision(It.IsAny<List<Parser.Model.ReleaseInfo>>(), It.IsAny<SearchCriteriaBase>()))
-                .Returns(new List<NzbDrone.Core.DecisionEngine.Specifications.DownloadDecision>());
+                .Returns(new List<DecisionEngine.Specifications.DownloadDecision>());
 
             _xemSeries = Builder<Series>.CreateNew()
                 .With(v => v.UseSceneNumbering = true)
@@ -46,6 +47,10 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             Mocker.GetMock<IEpisodeService>()
                 .Setup(v => v.GetEpisodesBySeason(_xemSeries.Id, It.IsAny<int>()))
                 .Returns<int, int>((i, j) => _xemEpisodes.Where(d => d.SeasonNumber == j).ToList());
+
+            Mocker.GetMock<ISceneMappingService>()
+                  .Setup(s => s.GetSceneNames(It.IsAny<Int32>(), It.IsAny<IEnumerable<Int32>>()))
+                  .Returns(new List<String>());
         }
 
         private void WithEpisode(int seasonNumber, int episodeNumber, int sceneSeasonNumber, int sceneEpisodeNumber)

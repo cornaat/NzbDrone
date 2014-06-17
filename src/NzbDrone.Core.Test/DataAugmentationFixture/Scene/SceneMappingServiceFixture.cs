@@ -118,7 +118,7 @@ namespace NzbDrone.Core.Test.DataAugmentationFixture.Scene
 
             foreach (var sceneMapping in _fakeMappings)
             {
-                Subject.GetSceneNames(sceneMapping.TvdbId, new int[] { 1 }).Should().Contain(sceneMapping.SearchTerm);
+                Subject.GetSceneNames(sceneMapping.TvdbId, _fakeMappings.Select(m => m.SeasonNumber)).Should().Contain(sceneMapping.SearchTerm);
                 Subject.GetTvDbId(sceneMapping.ParseTerm).Should().Be(sceneMapping.TvdbId);
             }
         }
