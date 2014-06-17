@@ -44,11 +44,16 @@ namespace NzbDrone.Core.DataAugmentation.Scene
 
         public List<String> GetSceneNames(int tvdbId, IEnumerable<Int32> seasonNumbers)
         {
-            return FilterNonEnglish(_findbytvdbIdCache.Find(tvdbId.ToString())
-                                                      .Where(s =>
-                                                              seasonNumbers.Contains(s.SeasonNumber) ||
-                                                              s.SeasonNumber == -1)
-                                                      .Select(m => m.SearchTerm).Distinct().ToList());
+            var names = _findbytvdbIdCache.Find(tvdbId.ToString());
+
+            if (names == null)
+            {
+                return new List<String>();
+            }
+
+            return FilterNonEnglish(names.Where(s => seasonNumbers.Contains(s.SeasonNumber) ||
+                                                     s.SeasonNumber == -1)
+                                         .Select(m => m.SearchTerm).Distinct().ToList());
         }
 
         public Nullable<Int32> GetTvDbId(string title)
