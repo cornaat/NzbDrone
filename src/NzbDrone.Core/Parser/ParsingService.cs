@@ -159,7 +159,7 @@ namespace NzbDrone.Core.Parser
 
                     if (sceneSource)
                     {
-                        if (sceneSeasonNumber.HasValue && sceneSeasonNumber > 1)
+                        if (sceneSeasonNumber.HasValue)
                         {
                             episode = _episodeService.FindEpisode(series.Id, sceneSeasonNumber.Value,
                                 absoluteEpisodeNumber);
