@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Marr.Data.QGen;
 using NLog;
+using NzbDrone.Common;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Extensions;
 using NzbDrone.Core.Messaging.Events;
@@ -140,9 +141,16 @@ namespace NzbDrone.Core.Tv
 
         public Episode FindEpisodeBySceneNumbering(int seriesId, int sceneAbsoluteEpisodeNumber)
         {
-            return Query.Where(s => s.SeriesId == seriesId)
+            var episodes = Query.Where(s => s.SeriesId == seriesId)
                         .AndWhere(s => s.SceneAbsoluteEpisodeNumber == sceneAbsoluteEpisodeNumber)
-                        .SingleOrDefault();
+                        .ToList();
+
+            if (episodes.Empty() || episodes.Count > 1)
+            {
+                return null;
+            }
+
+            return episodes.Single();
         }
 
         public List<Episode> EpisodesBetweenDates(DateTime startDate, DateTime endDate)
