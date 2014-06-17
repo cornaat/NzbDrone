@@ -40,7 +40,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             RuleFor(c => c.Url).ValidRootUrl();
             RuleFor(c => c.ApiKey).NotEmpty().When(ShouldHaveApiKey);
-            RuleFor(c => c.Categories).NotEmpty();
+            RuleFor(c => c.Categories).NotEmpty().When(c => !c.AnimeCategories.Any());
+            RuleFor(c => c.AnimeCategories).NotEmpty().When(c => !c.Categories.Any());
             RuleFor(c => c.AdditionalParameters)
                 .Matches(AdditionalParametersRegex)
                 .When(c => !c.AdditionalParameters.IsNullOrWhiteSpace());
@@ -54,6 +55,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public NewznabSettings()
         {
             Categories = new[] { 5030, 5040 };
+            AnimeCategories = Enumerable.Empty<Int32>();
         }
 
         [FieldDefinition(0, Label = "URL")]
@@ -62,10 +64,13 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(1, Label = "API Key")]
         public String ApiKey { get; set; }
 
-        [FieldDefinition(2, Label = "Categories", HelpText = "Comma Separated list of categories", Advanced = true)]
+        [FieldDefinition(2, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable standard/daily shows", Advanced = true)]
         public IEnumerable<Int32> Categories { get; set; }
 
-        [FieldDefinition(3, Label = "Additional Parameters", HelpText = "Additional newznab parameters", Advanced = true)]
+        [FieldDefinition(3, Label = "Anime Categories", HelpText = "Comma Separated list, leave blank to disable anime", Advanced = true)]
+        public IEnumerable<Int32> AnimeCategories { get; set; }
+
+        [FieldDefinition(4, Label = "Additional Parameters", HelpText = "Additional newznab parameters", Advanced = true)]
         public String AdditionalParameters { get; set; }
 
         public ValidationResult Validate()

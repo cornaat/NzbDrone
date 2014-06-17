@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using NzbDrone.Common;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Newznab
@@ -79,7 +81,9 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             get
             {
-                var url = String.Format("{0}/api?t=tvsearch&cat={1}&extended=1{2}", Settings.Url.TrimEnd('/'), String.Join(",", Settings.Categories), Settings.AdditionalParameters);
+                var categories = String.Join(",", Settings.Categories.Concat(Settings.AnimeCategories));
+
+                var url = String.Format("{0}/api?t=tvsearch&cat={1}&extended=1{2}", Settings.Url.TrimEnd('/'), categories, Settings.AdditionalParameters);
 
                 if (!String.IsNullOrWhiteSpace(Settings.ApiKey))
                 {
@@ -92,6 +96,11 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override IEnumerable<string> GetEpisodeSearchUrls(List<String> titles, int tvRageId, int seasonNumber, int episodeNumber)
         {
+            if (Settings.Categories.Empty())
+            {
+                return Enumerable.Empty<String>();
+            }
+
             if (tvRageId > 0)
             {
                 return RecentFeed.Select(url => String.Format("{0}&limit=100&rid={1}&season={2}&ep={3}", url, tvRageId, seasonNumber, episodeNumber));
@@ -105,6 +114,11 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override IEnumerable<string> GetDailyEpisodeSearchUrls(List<String> titles, int tvRageId, DateTime date)
         {
+            if (Settings.Categories.Empty())
+            {
+                return Enumerable.Empty<String>();
+            }
+
             if (tvRageId > 0)
             {
                 return RecentFeed.Select(url => String.Format("{0}&limit=100&rid={1}&season={2:yyyy}&ep={2:MM}/{2:dd}", url, tvRageId, date)).ToList();
@@ -118,11 +132,10 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override IEnumerable<string> GetAnimeEpisodeSearchUrls(List<String> titles, int tvRageId, int absoluteEpisodeNumber)
         {
-            /*
-             * This is going to be interesting because often the tvRageId doesn't always 
-             * match the series and when there are multiple names by season its a mess
-             * For now: just search based on name and abs episode number
-             */
+            if (Settings.AnimeCategories.Empty())
+            {
+                return Enumerable.Empty<String>();
+            }
 
             return titles.SelectMany(title =>
                         RecentFeed.Select(url =>
@@ -132,6 +145,11 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override IEnumerable<string> GetSeasonSearchUrls(List<String> titles, int tvRageId, int seasonNumber, int offset)
         {
+            if (Settings.Categories.Empty())
+            {
+                return Enumerable.Empty<String>();
+            }
+
             if (tvRageId > 0)
             {
                 return RecentFeed.Select(url => String.Format("{0}&limit=100&rid={1}&season={2}&offset={3}", url, tvRageId, seasonNumber, offset));
