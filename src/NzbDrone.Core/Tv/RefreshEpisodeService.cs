@@ -70,6 +70,13 @@ namespace NzbDrone.Core.Tv
                     episodeToUpdate.Ratings = episode.Ratings;
                     episodeToUpdate.Images = episode.Images;
 
+                    //Reset the absolute episode number to zero if the series is not anime
+                    if (series.SeriesType != SeriesTypes.Anime)
+                    {
+                        episodeToUpdate.AbsoluteEpisodeNumber = 0;
+                    }
+                    
+
                     successCount++;
                 }
                 catch (Exception e)
@@ -151,6 +158,7 @@ namespace NzbDrone.Core.Tv
             if (series.SeriesType != SeriesTypes.Anime)
             {
                 _logger.Debug("Skipping absolute number lookup for non-anime");
+
                 return;
             }
 
