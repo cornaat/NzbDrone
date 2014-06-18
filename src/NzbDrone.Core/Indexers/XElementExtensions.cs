@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using NLog;
+using NzbDrone.Common;
 using NzbDrone.Common.Instrumentation;
 
 namespace NzbDrone.Core.Indexers
@@ -95,6 +96,11 @@ namespace NzbDrone.Core.Indexers
             var element = item.Element(elementName);
 
             if (element == null)
+            {
+                return defaultValue;
+            }
+
+            if (element.Value.IsNullOrWhiteSpace())
             {
                 return defaultValue;
             }
