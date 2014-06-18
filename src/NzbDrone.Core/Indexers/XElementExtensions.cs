@@ -89,5 +89,25 @@ namespace NzbDrone.Core.Indexers
 
             return element != null ? element.Value : defaultValue;
         }
+
+        public static T TryGetValue<T>(this XElement item, string elementName, T defaultValue)
+        {
+            var element = item.Element(elementName);
+
+            if (element == null)
+            {
+                return defaultValue;
+            }
+
+            try
+            {
+                return (T)Convert.ChangeType(element.Value, typeof(T));
+            }
+
+            catch (InvalidCastException)
+            {
+                return defaultValue;
+            }
+        }
     }
 }

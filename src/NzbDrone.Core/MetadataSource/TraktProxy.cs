@@ -80,10 +80,10 @@ namespace NzbDrone.Core.MetadataSource
             }
         }
 
-        public Tuple<Series, List<Episode>> GetSeriesInfo(int tvDbSeriesId)
+        public Tuple<Series, List<Episode>> GetSeriesInfo(int tvdbSeriesId)
         {
             var client = BuildClient("show", "summary");
-            var restRequest = new RestRequest(tvDbSeriesId.ToString() + "/extended");
+            var restRequest = new RestRequest(tvdbSeriesId.ToString() + "/extended");
             var response = client.ExecuteAndValidate<Show>(restRequest);
 
             var episodes = response.seasons.SelectMany(c => c.episodes).Select(MapEpisode).ToList();
@@ -131,7 +131,6 @@ namespace NzbDrone.Core.MetadataSource
             var episode = new Episode();
             episode.Overview = traktEpisode.overview;
             episode.SeasonNumber = traktEpisode.season;
-            episode.EpisodeNumber = traktEpisode.episode;
             episode.EpisodeNumber = traktEpisode.number;
             episode.Title = traktEpisode.title;
             episode.AirDate = FromIsoToString(traktEpisode.first_aired_iso);
