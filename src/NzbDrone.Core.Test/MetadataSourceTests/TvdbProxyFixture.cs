@@ -40,6 +40,7 @@ namespace NzbDrone.Core.Test.MetadataSourceTests
 //        }
 
         [TestCase(88031)]
+        [TestCase(179321)]
         public void should_be_able_to_get_series_detail(int tvdbId)
         {
             var details = Subject.GetSeriesInfo(tvdbId);
