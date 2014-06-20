@@ -68,7 +68,14 @@ namespace NzbDrone.Core.DataAugmentation.Scene
 
         public List<SceneMapping> FindByTvdbid(int tvdbId)
         {
-            return _findbytvdbIdCache.Find(tvdbId.ToString());
+            var mappings = _findbytvdbIdCache.Find(tvdbId.ToString());
+
+            if (mappings == null)
+            {
+                return new List<SceneMapping>();
+            }
+
+            return mappings;
         }
 
         public Nullable<Int32> GetSeasonNumber(string title)
